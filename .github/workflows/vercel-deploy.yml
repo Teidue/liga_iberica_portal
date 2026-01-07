@@ -1,0 +1,80 @@
+name: Deploy to Vercel (Full Monorepo)
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Install dependencies
+      run: |
+        npm install
+        cd packages/backend
+        npm install
+        cd ../frontend
+        npm install
+
+    - name: Build frontend
+      run: |
+        cd packages/frontend
+        npm run build
+
+    - name: Setup Vercel config
+      run: |
+        # Create vercel.json for monorepo
+        cat > vercel.json << 'EOF'
+        {
+          "version": 2,
+          "builds": [
+            {
+              "src": "packages/backend/src/main.ts",
+              "use": "@vercel/node"
+            },
+            {
+              "src": "packages/frontend/package.json",
+              "use": "@vercel/static-build",
+              "config": {
+                "distDir": "out"
+              }
+            }
+          ],
+          "routes": [
+            {
+              "src": "/api/(.*)",
+              "dest": "/packages/backend/src/main.ts"
+            },
+            {
+              "src": "/(.*)",
+              "dest": "/packages/frontend/out/$1"
+            }
+          ]
+        }
+        EOF
+
+    - name: Deploy to Vercel
+      uses: amondnet/vercel-action@v20
+      with:
+        vercel-token: ${{ secrets.VERCEL_TOKEN }}
+        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+        vercel-args: '--prod'
+
+    - name: Deployment Success
+      run: |
+        echo "🚀 FULL DEPLOY COMPLETED!"
+        echo "📦 Backend API: /api/*"
+        echo "🎨 Frontend App: /*"
+        echo "☁️ Database: Neon conectada"
+        echo "🌐 URL: https://tu-proyecto.vercel.app"
+        echo "✅ Monorepo completo en producción!"
