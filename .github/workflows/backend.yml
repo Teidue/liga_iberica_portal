@@ -1,13 +1,16 @@
-name: CI/CD Pipeline
+name: Backend CI/CD
 
 on:
   push:
     branches: [ main ]
+    paths-ignore:
+      - 'packages/frontend/**'
   pull_request:
     branches: [ main ]
+    paths-ignore:
+      - 'packages/frontend/**'
 
 jobs:
-  # CI Pipeline - Tests y calidad de código
   test:
     runs-on: ubuntu-latest
     
@@ -34,7 +37,6 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '20'
-        cache: 'npm'
 
     - name: Install dependencies
       run: |
@@ -59,7 +61,6 @@ jobs:
         cd packages/backend
         npm run build
 
-  # CD Pipeline - Deploy a producción
   deploy:
     needs: test
     runs-on: ubuntu-latest
@@ -73,7 +74,6 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '20'
-        cache: 'npm'
 
     - name: Install dependencies
       run: |
@@ -92,12 +92,6 @@ jobs:
         echo "📦 Application built successfully"
         echo "☁️ Connected to Neon Database"
         echo "🌐 Ready for production traffic!"
-        
-        # Simulate deployment (replace with actual deployment target)
-        npm run start &
-        sleep 10
-        kill %1
-        
         echo "✅ Deployment completed successfully!"
       env:
         NODE_ENV: production
