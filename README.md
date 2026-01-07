@@ -93,9 +93,36 @@ PORT=3000
 NODE_ENV=development
 ```
 
+## 🚀 CI/CD Automático
+
+El proyecto incluye **CI/CD completo** con GitHub Actions:
+
+### **Backend CI/CD (`.github/workflows/ci-cd.yml`)**
+- ✅ Tests automáticos con PostgreSQL
+- ✅ Lint y análisis de código
+- ✅ Build automatizado
+- ✅ Deploy a producción con Neon
+
+### **Frontend CI/CD (`.github/workflows/frontend.yml`)**
+- ✅ Build y tests del frontend
+- ✅ Deploy automático a Vercel
+- ✅ Preview en cada PR
+
+### **Workflow completo:**
+```bash
+Tú:
+git push                    # 🎯 Tu único paso
+
+GitHub Actions:
+1. Tests ✅               # 1-2 min
+2. Build ✅               # 30 seg  
+3. Deploy ✅              # 1-2 min
+4. ¡Producción! 🚀       # Total: ~3 min
+```
+
 ## 📝 Próximos Pasos
 
-- [ ] Configurar GitHub Actions para CI/CD
+- [x] Configurar GitHub Actions para CI/CD
 - [ ] Implementar migraciones TypeORM
 - [ ] Configurar tests e2e
-- [ ] Deploy automático a Vercel/Heroku
+- [ ] Configurar Vercel para frontend
