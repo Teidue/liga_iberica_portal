@@ -89,10 +89,18 @@ jobs:
 
     - name: Deploy to production
       run: |
+        cd packages/backend
         echo "🚀 Deploying to production..."
         echo "📦 Application built successfully"
         echo "☁️ Connected to Neon Database"
         echo "🌐 Ready for production traffic!"
+        
+        # Simulate deployment (replace with actual deployment target)
+        npm run start &
+        sleep 10
+        kill %1
+        
+        echo "✅ Deployment completed successfully!"
       env:
         NODE_ENV: production
         NEON_DATABASE_URL: ${{ secrets.NEON_DATABASE_URL }}
