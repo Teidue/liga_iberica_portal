@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, DeepPartial } from 'typeorm';
 import { Team } from './entities/team.entity';
 
 @Injectable()
@@ -23,12 +23,12 @@ export class TeamsService {
     });
   }
 
-  create(data: any) {
+  create(data: DeepPartial<Team>) {
     const team = this.repo.create(data);
     return this.repo.save(team);
   }
 
-  async update(id: number, data: any) {
+  async update(id: number, data: DeepPartial<Team>) {
     await this.repo.update(id, data);
     return this.findOne(id);
   }

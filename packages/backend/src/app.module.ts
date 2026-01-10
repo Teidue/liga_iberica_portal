@@ -1,3 +1,8 @@
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { CommonModule } from './common/common.module';
+import { AuthModule } from './auth/auth.module';
+import { SeedModule } from './seed/seed.module';
 import { ClubsModule } from './modules/clubs/clubs.module';
 import { GuestsModule } from './modules/guests/guests.module';
 import { MatchDaysModule } from './modules/match-days/match-days.module';
@@ -9,23 +14,29 @@ import { TournamentTeamsModule } from './modules/tournament-teams/tournament-tea
 import { TournamentsModule } from './modules/tournaments/tournaments.module';
 import { UsersModule } from './modules/users/users.module';
 
-import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env.NODE_ENV === 'production' ? 'ep-twilight-truth-a4fgvypc-pooler.us-east-1.aws.neon.tech' : (process.env.DB_HOST || 'localhost'),
-      port: process.env.NODE_ENV === 'production' ? 5432 : (parseInt(process.env.DB_PORT || '5432') || 5432),
-      username: process.env.NODE_ENV === 'production' ? 'neondb_owner' : (process.env.DB_USERNAME || 'postgres'),
-      password: process.env.NODE_ENV === 'production' ? 'npg_oAShDzOj6H2s' : (process.env.DB_PASSWORD || 'tadeo123'),
-      database: process.env.NODE_ENV === 'production' ? 'neondb' : (process.env.DB_DATABASE || 'liga_iberica_portal'),
-      ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+      host: process.env.DB_HOST || 'localhost',
+      port: parseInt(process.env.DB_PORT || '5432'),
+      username: process.env.DB_USERNAME || 'postgres',
+      password: process.env.DB_PASSWORD || 'tadeo123',
+      database: process.env.DB_DATABASE || 'liga_iberica_portal',
+      ssl:
+        process.env.NODE_ENV === 'production'
+          ? {
+              rejectUnauthorized: false,
+            }
+          : false,
       autoLoadEntities: true,
-      synchronize: process.env.NODE_ENV === 'development', // SOLO en desarrollo
-      // dropSchema: true, // SOLO en desarrollo. Cuidado en producción.
+      synchronize: false,
+      migrations: ['dist/migrations/*.js'],
+      migrationsRun: process.env.NODE_ENV === 'production',
     }),
+    AuthModule,
+    CommonModule,
+    SeedModule,
     ClubsModule,
     GuestsModule,
     MatchDaysModule,

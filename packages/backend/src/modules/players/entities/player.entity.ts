@@ -19,8 +19,8 @@ export class Player {
   @Column()
   documento: string;
 
-  @Column({ default: true })
-  estado: boolean;
+  @Column({ default: 'activo' })
+  estado: string;
 
   @ManyToOne(() => Team, (team) => team.players)
   team: Team;

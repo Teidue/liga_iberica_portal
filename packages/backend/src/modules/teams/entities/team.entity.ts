@@ -18,7 +18,7 @@ export class Team {
   @Column()
   nombre: string;
 
-  @ManyToOne(() => User, (user) => user.teamsManaged, { nullable: true })
+  @ManyToOne(() => User, (user) => user.teamsManaged, { nullable: false })
   @JoinColumn({ name: 'adminId' })
   admin: User;
 

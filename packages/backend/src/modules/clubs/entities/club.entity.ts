@@ -9,7 +9,7 @@ export class Club {
   @Column()
   nombre: string;
 
-  @Column({ nullable: true })
+  @Column()
   direccion: string;
 
   @Column({ type: 'json', nullable: true })

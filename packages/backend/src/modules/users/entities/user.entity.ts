@@ -6,6 +6,20 @@ export enum UserRole {
   TEAM_ADMIN = 'TEAM_ADMIN',
 }
 
+export interface UserWithoutPassword {
+  id: number;
+  nombre: string;
+  email: string;
+  rol: UserRole;
+}
+
+export interface JwtPayload {
+  email: string;
+  sub: number;
+  rol: UserRole;
+  nombre: string;
+}
+
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
